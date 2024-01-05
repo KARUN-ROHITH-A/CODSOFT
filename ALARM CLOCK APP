@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alarm Clock App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .home-screen, #alarm-setting, #alarm-management {
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin: 10px 0;
+    }
+
+    li button {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="home-screen">
+      <h1>Current Time: <span id="current-time"></span></h1>
+      <h2>Date: <span id="current-date"></span></h2>
+      <button onclick="openAlarmSetting()">Set New Alarm</button>
+    </div>
+
+    <div id="alarm-setting" class="hidden">
+      <h2>Set New Alarm</h2>
+      <label for="alarm-time">Alarm Time:</label>
+      <input type="time" id="alarm-time" required>
+      <br>
+      <label for="alarm-tone">Alarm Tone:</label>
+      <select id="alarm-tone">
+        <option value="tone1">Tone 1</option>
+        <option value="tone2">Tone 2</option>
+        <option value="tone3">Tone 3</option>
+      </select>
+      <br>
+      <button onclick="setNewAlarm()">Set Alarm</button>
+      <button onclick="closeAlarmSetting()">Cancel</button>
+    </div>
+
+    <div id="alarm-management" class="hidden">
+      <h2>Alarm Management</h2>
+      <ul id="alarm-list"></ul>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      updateDateTime();
+      setInterval(updateDateTime, 1000);
+    });
+
+    function updateDateTime() {
+      const currentTimeElement = document.getElementById('current-time');
+      const currentDateElement = document.getElementById('current-date');
+
+      const now = new Date();
+      const timeString = now.toLocaleTimeString();
+      const dateString = now.toLocaleDateString();
+
+      currentTimeElement.textContent = timeString;
+      currentDateElement.textContent = dateString;
+    }
+
+    function openAlarmSetting() {
+      document.getElementById('alarm-setting').classList.remove('hidden');
+    }
+
+    function closeAlarmSetting() {
+      document.getElementById('alarm-setting').classList.add('hidden');
+    }
+
+    function setNewAlarm() {
+      const alarmTime = document.getElementById('alarm-time').value;
+      const alarmTone = document.getElementById('alarm-tone').value;
+
+     
+      console.log(`New Alarm Set: Time - ${alarmTime}, Tone - ${alarmTone}`);
+
+      closeAlarmSetting();
+      showAlarmManagement();
+    }
+
+    function showAlarmManagement() {
+      document.getElementById('alarm-management').classList.remove('hidden');
+      updateAlarmList();
+    }
+
+    function updateAlarmList() {
+      const alarmListElement = document.getElementById('alarm-list');
+      
+      const alarms = [
+        { time: '08:00', tone: 'tone1', active: true },
+        { time: '12:30', tone: 'tone2', active: true },
+        { time: '18:45', tone: 'tone3', active: false },
+      ];
+
+      alarmListElement.innerHTML = ''; // Clear existing list
+
+      alarms.forEach((alarm, index) => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+          ${alarm.time} - ${alarm.tone}
+          <button onclick="toggleAlarm(${index})">${alarm.active ? 'Turn Off' : 'Turn On'}</button>
+          <button onclick="snoozeAlarm(${index})">Snooze</button>
+          <button onclick="dismissAlarm(${index})">Dismiss</button>
+        `;
+        alarmListElement.appendChild(listItem);
+      });
+    }
+
+    function toggleAlarm(index) {
+      
+      console.log(`Toggle Alarm ${index}`);
+      updateAlarmList();
+    }
+
+    function snoozeAlarm(index) {
+      
+      console.log(`Snooze Alarm ${index}`);
+      updateAlarmList();
+    }
+
+    function dismissAlarm(index) {
+      
+      console.log(`Dismiss Alarm ${index}`);
+      updateAlarmList();
+    }
+  </script>
+</body>
+</html>
